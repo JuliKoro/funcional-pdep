@@ -30,50 +30,50 @@ Todas las funciones pedidas deben estar tipadas.
 -   versionBarata: Dado el nombre de un producto conseguir su versión barata. La misma es el producto descodiciado y con su nombre dado vuelta.
 
 ### Funciones que pueden utilizar (y tienen que tipar, las usen o no):
-'''
+```
 take ::
-'''
-'''console
+```
+```console
 >> take 2 "Buenas!!"
 "Bu"
 
 >> take 5 "Saludos"
 "Salud"
-'''
-'''
+```
+```
 drop ::
-'''
-'''console
+```
+```console
 >> drop 2 "Buenas!!"
 "enas!!"
 
 >> drop 3 "Saludos"
 "udos"
-'''
-'''
+```
+```
 head ::
-'''
-'''console
+```
+```console
 >> head "Buenas!!"
 'B'
 
 >> head "Nos vemos"
 'N'
-'''
-'''
+```
+```
 elem ::
-'''
-'''console
+```
+```console
 >> elem 'a' "Buenas!!"
 True
 
 >> elem 'y' "Buenas!!"
 False
-'''
-'''
+```
+```
 reverse ::
-'''
-'''console
+```
+```console
 >> reverse "Buenas!!"
 "!!saneuB"
-'''
+```
