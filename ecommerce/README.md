@@ -1,5 +1,5 @@
 # PdeP - ecommerce\
-[Tarea del 04/04 - Pdep commmerce] (https://docs.google.com/document/d/1xNodCLGfltmDYTOtWbMIyI9kzukzazRJiS-TuuV0w2A/edit#heading=h.inumbn1neibb)
+[Tarea del 04/04] (https://docs.google.com/document/d/1xNodCLGfltmDYTOtWbMIyI9kzukzazRJiS-TuuV0w2A/edit#heading=h.inumbn1neibb)
 
 ![](https://lh5.googleusercontent.com/Dwh2I_VVHph91WEC1XVEU4hEgKbjCmd80VUp3-IqAajSoody4kpk5_xVzmmzjpz2jMeIj1eHLZSlSC-gGMAorigyuIDMo8cb_naMKniExsCLhQOE6kb9cxeXcCFznQ8C8JnhUrCZ)
 
