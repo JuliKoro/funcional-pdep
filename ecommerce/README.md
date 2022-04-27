@@ -1,4 +1,6 @@
 # PdeP - ecommerce\
+[Tarea del 04/04 - Pdep commmerce] (https://docs.google.com/document/d/1xNodCLGfltmDYTOtWbMIyI9kzukzazRJiS-TuuV0w2A/edit#heading=h.inumbn1neibb)
+
 ![](https://lh5.googleusercontent.com/Dwh2I_VVHph91WEC1XVEU4hEgKbjCmd80VUp3-IqAajSoody4kpk5_xVzmmzjpz2jMeIj1eHLZSlSC-gGMAorigyuIDMo8cb_naMKniExsCLhQOE6kb9cxeXcCFznQ8C8JnhUrCZ)
 
 En época de cuarentena, los sitios e-commerce son muy importantes para poder abastecer a la población sin que salga de sus hogares 🏠. Uno de los sitios más famosos de este estilo, nos pidió ayuda para finalizar algunas funcionalidades. Todo muy bien hasta acá, pero hay un pequeño detalle: el listado de funciones a desarrollar está desordenado 😅. Esto significa que algunas que aparecen al final son necesarias para realizar otras del principio. Vas a tener que pensar cuáles desarrollar primero 🤔. ¡Vamos!
@@ -28,49 +30,50 @@ Todas las funciones pedidas deben estar tipadas.
 -   versionBarata: Dado el nombre de un producto conseguir su versión barata. La misma es el producto descodiciado y con su nombre dado vuelta.
 
 ### Funciones que pueden utilizar (y tienen que tipar, las usen o no):
-
+'''
 take ::
-
+'''
+'''console
 >> take 2 "Buenas!!"
-
 "Bu"
 
 >> take 5 "Saludos"
-
 "Salud"
-
+'''
+'''
 drop ::
-
+'''
+'''console
 >> drop 2 "Buenas!!"
-
 "enas!!"
 
 >> drop 3 "Saludos"
-
 "udos"
-
+'''
+'''
 head ::
-
+'''
+'''console
 >> head "Buenas!!"
-
 'B'
 
 >> head "Nos vemos"
-
 'N'
-
+'''
+'''
 elem ::
-
+'''
+'''console
 >> elem 'a' "Buenas!!"
-
 True
 
 >> elem 'y' "Buenas!!"
-
 False
-
+'''
+'''
 reverse ::
-
+'''
+'''console
 >> reverse "Buenas!!"
-
 "!!saneuB"
+'''
