@@ -6,39 +6,41 @@ elem :: Eq a => a -> [a] -> Bool
 reverse :: [a] -> [a]
 -}
 
+productoDeLujo :: Num a => (String, a) -> Bool
+productoDeLujo (nombre, _) = elem 'x' nombre || elem 'z' nombre
 
-precioTotal :: Float -> Float -> Float -> Float -> Float
-precioTotal precioUnitario cantidad descuento costoDeEnvio = aplicarCostoDeEnvio (aplicarDescuento precioUnitario descuento * cantidad) costoDeEnvio
-
-productoDeElite :: String -> Bool
-productoDeElite nombreDeProducto = productoDeLujo nombreDeProducto && productoCodiciado nombreDeProducto && (not . productoCorriente) nombreDeProducto
-
-aplicarDescuento :: Float -> Float -> Float
-aplicarDescuento unPrecio unDescuento = unPrecio * (1 - unDescuento)
-
-entregaSencilla :: String -> Bool
-entregaSencilla unDia = even . length $ unDia
-
-descodiciarProducto :: String -> String
-descodiciarProducto nombreDeProducto = take 10 nombreDeProducto
-
-productoDeLujo :: String -> Bool
-productoDeLujo nombreDeProducto = elem 'x' nombreDeProducto || elem 'z' nombreDeProducto
-
-aplicarCostoDeEnvio :: Float -> Float -> Float
-aplicarCostoDeEnvio unPrecio unCostoDeEnvio = unPrecio + unCostoDeEnvio
-
-productoCodiciado :: String -> Bool
-productoCodiciado nombreDeProducto = length nombreDeProducto > 10
-
-productoCorriente :: String -> Bool
-productoCorriente nombreDeProducto = esVocal . head $ nombreDeProducto
+productoCodiciado :: Num a => (String, a) -> Bool
+productoCodiciado (nombre, _) = length nombre >= 10
 
 esVocal :: Char -> Bool
 esVocal unaLetra = elem unaLetra "aeiouAEIOU"
 
-productoXL :: String -> String
-productoXL nombreDeProducto = nombreDeProducto ++ " XL"
+productoCorriente :: Num a => (String, a) -> Bool
+productoCorriente (nombre, _) = esVocal . head $ nombre
 
-versionBarata :: String -> String
-versionBarata nombreDeProducto = reverse . descodiciarProducto $ nombreDeProducto
+productoDeElite :: Num a => (String, a) -> Bool
+productoDeElite (nombre, _) = productoDeLujo nombre && productoCodiciado nombre && (not . productoCorriente) nombre
+
+descodiciarProducto :: Num a => (String, a) -> String
+descodiciarProducto (nombre, _) = take ((length nombre) - 10) nombre
+
+productoXL :: Num a => (String, a) -> String
+productoXL (nombre, _) = nombre ++ "XL"
+
+versionBarata :: Num a => (String, a) -> String
+versionBarata (nombre, _) = reverse . descodiciarProducto nombre $ nombre
+
+aplicarDescuento :: Num a => (String, a) -> a -> a
+aplicarDescuento (_, precio) descuento = 
+    (fst producto, precio - precio * (descuento / 100))
+
+aplicarCostoDeEnvio :: Num a => (String, a) -> a -> a
+aplicarCostoDeEnvio (_, precio) costoDeEnvio = aplicarDescuento (precio) + costoDeEnvio
+
+precioTotal :: Num a => (String, a) -> Int -> a -> a -> a 
+precioTotal (_, precio) cantidad descuento costoDeEnvio = 
+    aplicarCostoDeEnvio . (aplicarDescuento . precio) $ precio
+
+entregaSencilla :: String -> Bool
+entregaSencilla diaDeEntrega = even . length $ diaDeEntrega
+
