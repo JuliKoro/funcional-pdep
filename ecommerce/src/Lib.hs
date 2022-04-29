@@ -1,4 +1,4 @@
-{-
+{- ecommerce
 take :: Int -> [a] -> [a]
 drop :: Int -> [a] -> [a]
 head :: [a] -> a
@@ -19,27 +19,26 @@ productoCorriente :: Num a => (String, a) -> Bool
 productoCorriente (nombre, _) = esVocal . head $ nombre
 
 productoDeElite :: Num a => (String, a) -> Bool
-productoDeElite (nombre, _) = productoDeLujo nombre && productoCodiciado nombre && (not . productoCorriente) nombre
+productoDeElite (nombre, precio) = productoDeLujo (nombre, precio) && productoCodiciado (nombre, precio) && (not . productoCorriente) (nombre, precio)
 
 descodiciarProducto :: Num a => (String, a) -> String
-descodiciarProducto (nombre, _) = take ((length nombre) - 10) nombre
+descodiciarProducto (nombre, _) = take 10 nombre
 
 productoXL :: Num a => (String, a) -> String
 productoXL (nombre, _) = nombre ++ "XL"
 
 versionBarata :: Num a => (String, a) -> String
-versionBarata (nombre, _) = reverse . descodiciarProducto nombre $ nombre
+versionBarata (nombre, precio) = reverse . descodiciarProducto $ (nombre, precio)
 
-aplicarDescuento :: Num a => (String, a) -> a -> a
-aplicarDescuento (_, precio) descuento = 
-    (fst producto, precio - precio * (descuento / 100))
+aplicarDescuento :: Num a => a -> a -> a -- corregir (devuelve negativo)
+aplicarDescuento precio descuento = precio - descuento
 
-aplicarCostoDeEnvio :: Num a => (String, a) -> a -> a
-aplicarCostoDeEnvio (_, precio) costoDeEnvio = aplicarDescuento (precio) + costoDeEnvio
+aplicarCostoDeEnvio :: Num a => a -> a -> a
+aplicarCostoDeEnvio precio costoDeEnvio = precio + costoDeEnvio
 
-precioTotal :: Num a => (String, a) -> Int -> a -> a -> a 
+precioTotal :: Num a => (String, a) -> a -> a -> a -> a
 precioTotal (_, precio) cantidad descuento costoDeEnvio = 
-    aplicarCostoDeEnvio . (aplicarDescuento . precio) $ precio
+    aplicarCostoDeEnvio (aplicarDescuento precio descuento * cantidad) costoDeEnvio
 
 entregaSencilla :: String -> Bool
 entregaSencilla diaDeEntrega = even . length $ diaDeEntrega
