@@ -1,4 +1,5 @@
-{- ecommerce
+{- ecommerce - Julián Koroluk
+
 take :: Int -> [a] -> [a]
 drop :: Int -> [a] -> [a]
 head :: [a] -> a
@@ -30,13 +31,13 @@ productoXL (nombre, _) = nombre ++ "XL"
 versionBarata :: Num a => (String, a) -> String
 versionBarata (nombre, precio) = reverse . descodiciarProducto $ (nombre, precio)
 
-aplicarDescuento :: Num a => a -> a -> a -- corregir (devuelve negativo)
-aplicarDescuento precio descuento = precio - descuento
+aplicarDescuento :: Fractional b => b -> b -> b
+aplicarDescuento precio descuento = precio - precio * (descuento / 100)
 
 aplicarCostoDeEnvio :: Num a => a -> a -> a
 aplicarCostoDeEnvio precio costoDeEnvio = precio + costoDeEnvio
 
-precioTotal :: Num a => (String, a) -> a -> a -> a -> a
+precioTotal :: Fractional b => (String, b) -> b -> b -> b -> b
 precioTotal (_, precio) cantidad descuento costoDeEnvio = 
     aplicarCostoDeEnvio (aplicarDescuento precio descuento * cantidad) costoDeEnvio
 
