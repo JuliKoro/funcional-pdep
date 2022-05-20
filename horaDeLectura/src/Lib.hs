@@ -40,6 +40,11 @@ brisignr = ("Christopher Paolini", "Brisignr", 700)
 legado :: Libro
 legado = ("Christopher Paolini", "Legado", 811)
 
+type Saga = [Libro]
+
+sagaDeEragon :: Saga
+sagaDeEragon = [eragon, eldest, brisignr, legado]
+
 type Biblioteca = [Libro] -- Lista de Libros
 
 miBiblioteca :: Biblioteca 
@@ -54,8 +59,10 @@ sumatoriaPaginasBiblioteca unaBiblioteca = sum . map paginas $ unaBiblioteca
 paginas :: Libro -> Int -- Accesor -> retorna solamente un elemento especifico de la terna
 paginas (_, _, paginas) = paginas
 
-lecturaObligatoria :: Libro -> Bool
-lecturaObligatoria unLibro = esDeAutor "Stephen King" unLibro || esDeSagaEragon unLibro || unLibro == fundacion
+lecturaObligatoria :: Libro -> Bool -- Pattern Matching
+lecturaObligatoria ("Isaac Asimov", "Fundación", 230) = True -- del más específico
+lecturaObligatoria ("Stephen King", _, _) = True
+lecturaObligatoria unLibro = esDeSagaEragon unLibro -- al más genérico
 
 esDeAutor :: String -> Libro -> Bool
 esDeAutor unAutor unLibro = autor unLibro == unAutor
@@ -64,7 +71,7 @@ autor :: Libro -> String
 autor (unAutor, _, _) = unAutor
 
 esDeSagaEragon :: Libro -> Bool
-esDeSagaEragon unLibro = elem (titulo unLibro) ["Eragon", "Eldest", "Legado", "Brisignr"]
+esDeSagaEragon unLibro = elem unLibro sagaDeEragon
 
 titulo :: Libro -> String
 titulo (_, unTitulo, _) = unTitulo
