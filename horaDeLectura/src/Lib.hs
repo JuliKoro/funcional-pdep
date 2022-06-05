@@ -1,5 +1,5 @@
 type Titulo = String -- alias de tipos
-type Autor = String 
+type Autor = String
 type Paginas = Int
 
 data Libro = UnLibro { -- Data (crear un tipo de dato)
@@ -11,7 +11,7 @@ data Libro = UnLibro { -- Data (crear un tipo de dato)
 -- elVisitante :: Libro -- es lo mismo que hacer "elVisitante :: (String, String, Int)"
 -- elVisitante = ("Stephen King", "El Visitante", 592) -- definicion de etiquetas
 
-elVisitante :: Libro 
+elVisitante :: Libro
 elVisitante = UnLibro "Stephen King" "El Visitante" 592
 
 shingeki1 :: Libro
@@ -54,7 +54,7 @@ sagaDeEragon = [eragon, eldest, brisignr, legado]
 
 type Biblioteca = [Libro] -- Lista de Libros
 
-miBiblioteca :: Biblioteca 
+miBiblioteca :: Biblioteca
 miBiblioteca = [elVisitante, shingeki1, shingeki3, shingeki127, sandman5, sandman10, sandman12, legado, brisignr, eragon, eldest, fundacion]
 
 promedioDePaginas :: Biblioteca -> Int -- `div`para que sea infija
@@ -85,7 +85,7 @@ esLibroFantasioso :: Libro -> Bool
 esLibroFantasioso unLibro = esDeAutor "Christopher Paolini" unLibro || esDeAutor "Neil Gaiman" unLibro
 
 nombreDeLaBiblioteca :: Biblioteca -> String
-nombreDeLaBiblioteca unaBiblioteca = sinVocales . concat . listaDeTitulos $ unaBiblioteca
+nombreDeLaBiblioteca = sinVocales . concat . listaDeTitulos -- pasando como parámetro implícito
 
 sinVocales :: String -> String
 sinVocales unNombre = filter (not . esVocal) unNombre
