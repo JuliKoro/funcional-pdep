@@ -6,41 +6,47 @@ head :: [a] -> a
 elem :: Eq a => a -> [a] -> Bool
 reverse :: [a] -> [a]
 -}
+type Producto = (String, Float)
 
-productoDeLujo :: Num a => (String, a) -> Bool
-productoDeLujo (nombre, _) = elem 'x' nombre || elem 'z' nombre
+nombreProducto :: Producto -> String
+nombreProducto (nombre, _) = nombre
 
-productoCodiciado :: Num a => (String, a) -> Bool
-productoCodiciado (nombre, _) = length nombre >= 10
+precioProducto :: Producto -> Float
+precioProducto (_, precio) = precio
+
+productoDeLujo :: Producto -> Bool
+productoDeLujo unProducto = ((elem 'x') . nombreProducto $ unProducto) || ((elem 'z') . nombreProducto $ unProducto)
+
+productoCodiciado :: Producto -> Bool
+productoCodiciado unProducto = (length . nombreProducto $ unProducto) > 10
 
 esVocal :: Char -> Bool
 esVocal unaLetra = elem unaLetra "aeiouAEIOU"
 
-productoCorriente :: Num a => (String, a) -> Bool
-productoCorriente (nombre, _) = esVocal . head $ nombre
+productoCorriente :: Producto -> Bool
+productoCorriente unProducto = esVocal . head . nombreProducto $ unProducto
 
-productoDeElite :: Num a => (String, a) -> Bool
-productoDeElite (nombre, precio) = productoDeLujo (nombre, precio) && productoCodiciado (nombre, precio) && (not . productoCorriente) (nombre, precio)
+productoDeElite :: Producto -> Bool
+productoDeElite unProducto = productoDeLujo unProducto && productoCodiciado unProducto && (not . productoCorriente) unProducto
 
-descodiciarProducto :: Num a => (String, a) -> String
-descodiciarProducto (nombre, _) = take 10 nombre
+descodiciarProducto :: Producto -> String
+descodiciarProducto unProducto = (take 10) . nombreProducto $ unProducto
 
-productoXL :: Num a => (String, a) -> String
-productoXL (nombre, _) = nombre ++ "XL"
+productoXL :: Producto -> String
+productoXL unProducto = (nombreProducto unProducto) ++ "XL"
 
-versionBarata :: Num a => (String, a) -> String
-versionBarata (nombre, precio) = reverse . descodiciarProducto $ (nombre, precio)
+versionBarata :: Producto -> String
+versionBarata unProducto = reverse . descodiciarProducto $ unProducto
 
-aplicarDescuento :: Fractional b => b -> b -> b
+aplicarDescuento :: Float -> Float -> Float
 aplicarDescuento precio descuento = precio - precio * (descuento / 100)
 
-aplicarCostoDeEnvio :: Num a => a -> a -> a
+aplicarCostoDeEnvio :: Float -> Float -> Float
 aplicarCostoDeEnvio precio costoDeEnvio = precio + costoDeEnvio
 
-precioTotal :: Fractional b => (String, b) -> b -> b -> b -> b
-precioTotal (_, precio) cantidad descuento costoDeEnvio = 
-    aplicarCostoDeEnvio (aplicarDescuento precio descuento * cantidad) costoDeEnvio
+precioTotal :: Producto -> Float -> Float -> Float -> Float
+precioTotal unProducto cantidad descuento costoDeEnvio =
+    aplicarCostoDeEnvio (aplicarDescuento (precioProducto unProducto) descuento * cantidad) costoDeEnvio
 
 entregaSencilla :: String -> Bool
 entregaSencilla diaDeEntrega = even . length $ diaDeEntrega
-
