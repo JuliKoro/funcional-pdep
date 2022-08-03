@@ -28,6 +28,9 @@ mapDuracion unaFuncion unaCancion = unaCancion {duracion = unaFuncion . duracion
 mapGenero :: (String -> String) -> Cancion -> Cancion
 mapGenero unaFuncion unaCancion = unaCancion {genero = unaFuncion . genero $ unaCancion}
 
+mapCanciones :: Efecto -> Artista -> Artista
+mapCanciones unEfecto unArtista = unArtista {canciones = (map unEfecto) . canciones $ unArtista}
+
 -- setter
 setDuracion :: Int -> Cancion -> Cancion
 setDuracion = mapDuracion . const
@@ -104,3 +107,55 @@ cancionesDelGenero unGenero unArtista = filter (esDelGenero unGenero) . cancione
 
 -- PARTE C
 -- 1.
+hacerseDJ :: Artista -> Artista
+hacerseDJ unArtista = mapCanciones (efectoPreferido unArtista) unArtista
+
+-- 2.
+tieneGustoHomogeneo :: Artista -> Bool
+tieneGustoHomogeneo unArtista = sonTodosIguales . map genero . canciones $ unArtista
+
+sonTodosIguales :: Eq a => [a] -> Bool
+sonTodosIguales unaLista = all (== head unaLista) unaLista
+
+-- 3.
+formarBanda :: String -> [Artista] -> Artista
+formarBanda unNombre listaDeArtistas = UnArtista {
+  nombre = unNombre,
+  canciones = concatMap canciones listaDeArtistas,
+  efectoPreferido = metaEfecto . map efectoPreferido $ listaDeArtistas
+}
+
+-- 4.
+obraMaestraProgresiva :: Artista -> Cancion
+obraMaestraProgresiva unArtista = UnaCancion {
+  titulo = concatMap titulo . canciones $ unArtista,
+  duracion = sum . map duracion . canciones $ unArtista,
+  genero = (++ " progresivo") . foldl1 generoSuperador . map genero . canciones $ unArtista
+}
+
+generoSuperador :: String -> String -> String
+generoSuperador "rock" _ = "rock"
+generoSuperador _ "rock" = "rock"
+generoSuperador "reggaeton" otroGenero = otroGenero
+generoSuperador otroGenero "reggaeton" = otroGenero
+generoSuperador unGenero otroGenero = maximoSegun length unGenero otroGenero
+
+maximoSegun :: Ord b => (a -> b) -> a -> a -> a
+maximoSegun criterio unValor otroValor
+  | max (criterio unValor) (criterio otroValor) == (criterio unValor) = unValor
+  | otherwise = otroValor
+
+{- PARTE D
+billieEilish :: Artista
+billieEilish = UnArtista "Billie Eilish" [badGuy ..] undefined
+
+1. ¿Puede esta nueva artista hacerse dj?
+Si, esta aritsta puede hacerseDJ, ya que gracias al "lazy evaluation" que tiene Haskell el efecto es aplicado a la lista de canciones infinitamente.
+
+2. ¿Podemos echar un vistazo a su música?
+Si, ya que no hay que esperar a que la lista de canciones termine de generarse y simplemente toma las primeras 3 canciones cortas que encuentre.
+Aunque también depende de si la artista posee canciones cortas.
+
+3. ¿Podrá crear una obra maestra progresiva?
+No, ya que en este punto si necesita de la lista completa de canciones por lo que el programa no se rompería, sino que se quedaría esperando a que termine la lista, en este caso nunca.
+-}
