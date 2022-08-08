@@ -1,6 +1,7 @@
 # Bon Appétit
 ### [Recuperatorio de Funcional (3/08/2022)](https://docs.google.com/document/u/1/d/1Ud0ZHZnq45DNyip5TKo7P1tiYjDgPRjBhpIEGqinyxs/edit)
-![bonAppetit](/bonAppetit/imagen1.png)
+
+![bonAppetit](/bonAppetit/image1.png)
 
 Nos piden realizar la versión inicial de un sistema totalmente innovador, jamás visto en la industria y menos en PdeP: Un sistema de comidas y eventos.
 
