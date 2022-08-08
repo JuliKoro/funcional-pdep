@@ -1,7 +1,7 @@
 # Currify
 ### [Simulacro de Parcial Funcional - Clase 8](https://docs.google.com/document/d/1f5nzJo2HO2K-yD8RVPx3Ftbf4LHYdFCwyd12bH50EJU/edit)
 
-![Currify](funcional-pdep/currify/image1.png)
+![Currify](/currify/image1.png)
 
 >Ayer a la noche sucedió un trágico evento, la gente de Spotify subió una canción, pero no contaban con los derechos de autoría de la misma. Lamentablemente su página fue clausurada, peeero como saben de nuestros conocimientos en el paradigma funcional nos pidieron que les creemos una nueva. Para evitar más conflictos decidimos cambiar su nombre a ***Currify***.
 
