@@ -1,5 +1,6 @@
 # Monopoly
-### [Tarea Opcional - 16/05/2022](https://www.iconspng.com/uploads/monopoly-old-logo.png)
+### [Tarea Opcional - 16/05/2022](https://docs.google.com/document/d/1KazDAzeUB7lYIbuob36d8SS4DGV3_eK93MODm0fWMJY/edit)
+![Monopoly](https://www.iconspng.com/uploads/monopoly-old-logo.png)
 
 La cuarentena sigue y levante la mano quién empezó a desempolvar los juegos de mesa 🙋‍♀️🙋‍♂️. Nos encontramos con el _Monopoly_: un juego en donde cada participante compra y vende propiedades con el objetivo de monopolizar la oferta de inmuebles. En esta ocasión, queremos programar tan famoso juego y creemos que vos sos la persona indicada para hacerlo 👩‍💻👨‍💻. ¡A programar!
 
