@@ -1,5 +1,5 @@
 # Monopoly
-## [Tarea Opcional - 16/05/2022](https://static.wikia.nocookie.net/logopedia/images/2/2b/Monopoly_1985.svg/revision/latest?cb=20211209151235&path-prefix=es)
+## [Tarea Opcional - 16/05/2022](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.stickpng.com%2Fes%2Fimg%2Fjuegos%2Fmonopoly%2Fmonopoly-viejo-logo&psig=AOvVaw0Xp3yEoAGyqgRbx5WnHc0D&ust=1670807663647000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCNid692x8PsCFQAAAAAdAAAAABAD)
 
 La cuarentena sigue y levante la mano quién empezó a desempolvar los juegos de mesa 🙋‍♀️🙋‍♂️. Nos encontramos con el _Monopoly_: un juego en donde cada participante compra y vende propiedades con el objetivo de monopolizar la oferta de inmuebles. En esta ocasión, queremos programar tan famoso juego y creemos que vos sos la persona indicada para hacerlo 👩‍💻👨‍💻. ¡A programar!
 
