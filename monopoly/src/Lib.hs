@@ -43,30 +43,91 @@ mapTactica unaFuncion unJugador = unJugador {tactica = unaFuncion . tactica $ un
 mapAcciones :: ([Accion] -> [Accion]) -> Jugador -> Jugador
 mapAcciones unaFuncion unJugador = unJugador {acciones = unaFuncion . acciones $ unJugador}
 
+mapPropiedades :: ([Propiedad] -> [Propiedad]) -> Jugador -> Jugador
+mapPropiedades unaFuncion unJugador = unJugador {propiedades = unaFuncion . propiedades $ unJugador}
+
 -- Setters
 setTactica :: String -> Jugador -> Jugador
-setTactica unaTactica unJugador = mapTactica (const unaTactica) unJugador
+setTactica unaTactica = mapTactica (const unaTactica) --Aplicacion Parcial
+--setTactica = mapTactica . const --Point free
+--setTactica unaTactica unJugador = mapTactica (const unaTactica) unJugador
 
 -- 2. Acciones
 pasarPorElBanco :: Accion
-pasarPorElBanco unJugador = (setTactica "Comprador compulsivo") . mapDinero (+ 40) $ unJugador
+pasarPorElBanco = (setTactica "Comprador compulsivo") . mapDinero (+ 40)
 
 enojarse :: Accion
-enojarse unJugador =  mapAcciones (++ [gritar]) . mapDinero (+ 50) $ unJugador
+enojarse =  mapAcciones (++ [gritar]) . mapDinero (+ 50)
 
 gritar :: Accion
-gritar unJugador = mapNombre ("AHHHH " ++) unJugador
+gritar = mapNombre ("AHHHH " ++)
 
-subastar :: Accion
-subastar
+subastar :: Propiedad -> Accion
+subastar unaPropiedad unJugador
+  | tieneTactica "Oferente singular" unJugador || tieneTactica "Accionista" unJugador = ganarPropiedad unaPropiedad unJugador
+  | otherwise = unJugador
+
+tieneTactica :: String -> Jugador -> Bool
+tieneTactica unaTactica = (unaTactica ==) . tactica
+
+ganarPropiedad :: Propiedad -> Accion
+ganarPropiedad unaPropiedad = mapPropiedades (++ [unaPropiedad]) . mapDinero (+ (-snd unaPropiedad))
 
 cobrarAlquileres :: Accion
-cobrarAlquileres
+cobrarAlquileres unJugador = mapDinero ((+) . recaudacionAlquileres . propiedades $ unJugador) unJugador
+
+recaudacionAlquileres :: [Propiedad] -> Float
+recaudacionAlquileres [] = 0
+recaudacionAlquileres (x:xs)
+  | esBarata x = 10 + recaudacionAlquileres xs
+  | otherwise = 20 + recaudacionAlquileres xs
+
+esBarata :: Propiedad -> Bool
+esBarata = (< 150) . snd
 
 pagarAAccionistas :: Accion
 pagarAAccionistas unJugador
   | tactica unJugador == "Accionista" = mapDinero (+ 200) unJugador
   | otherwise = mapDinero (+ (-100)) unJugador
 
-hacerBerrinchePor :: Accion
-hacerBerrinchePor
+hacerBerrinchePor :: Propiedad -> Accion
+hacerBerrinchePor unaPropiedad unJugador
+  | leAlcanza unaPropiedad unJugador = ganarPropiedad unaPropiedad unJugador
+  | otherwise = hacerBerrinchePor unaPropiedad . mapDinero (+ 10) . gritar $ unJugador
+
+leAlcanza :: Propiedad -> Jugador -> Bool
+leAlcanza (_, precio) (UnJugador _ dinero _ _ _) = dinero >= precio
+
+ultimaRonda :: Accion -- corregir, falta que el jugadro ejecute las acciones que va sumando
+ultimaRonda unJugador = foldl (flip ($)) unJugador (acciones unJugador)
+--ultimaRonda unJugador = foldl (flip (.)) id (acciones unJugador) $ unJugador
+
+--aplicarAcciones :: [Accion] -> Accion
+--aplicarAcciones [] unJugador = unJugador
+--aplicarAcciones (x:xs) unJugador = (aplicarAcciones xs) . x $ unJugador
+
+-- 3. Propiedades
+edificioKavanagh :: Propiedad
+edificioKavanagh = ("Edificio Kavanagh", 2000)
+
+teatroColon :: Propiedad
+teatroColon = ("Teatro Colon", 2500)
+
+palacioBarolo :: Propiedad
+palacioBarolo = ("Palacio Barolo", 1900)
+
+galeriaGuemes :: Propiedad
+galeriaGuemes = ("Galeria Guemes", 1000)
+
+palacioPaz :: Propiedad
+palacioPaz = ("Palacio Paz", 3000)
+
+-- 4. Ganador
+juegoFinal :: Jugador -> Jugador -> Jugador
+juegoFinal jugador1 jugador2 = quienTieneMasDinero (ultimaRonda jugador1) (ultimaRonda jugador2)
+
+quienTieneMasDinero :: Jugador -> Jugador -> Jugador
+quienTieneMasDinero jugador1 jugador2
+  | dinero jugador1 > dinero jugador2 = jugador1
+  | dinero jugador2 > dinero jugador1 = jugador2
+  | otherwise = error "No pueden tener lo mismo"
