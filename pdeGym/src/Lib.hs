@@ -1,15 +1,17 @@
 import Text.Show.Functions ()
 
--- PARTE A
+-- Modelado y Tipados
 data Persona = UnaPersona {
   nombre :: String,
   calorias :: Int,
   hidratacion :: Int,
-  disponibilidad :: Float,
+  disponibilidad :: Tiempo,
   equipamiento :: [String]
 } deriving Show
 
+type Tiempo = Int -- minutos
 type Ejercicio = Persona -> Persona
+type Rutina = (Tiempo, [Ejercicio])
 
 -- Mappers
 mapNombre :: (String -> String) -> Persona -> Persona
@@ -25,8 +27,6 @@ mapEquipamiento :: ([String] -> [String]) -> Persona -> Persona
 mapEquipamiento unaFuncion unaPersona = unaPersona {equipamiento = unaFuncion . equipamiento $ unaPersona}
 
 -- Setters
-setCalorias :: Int -> Persona -> Persona
-setCalorias = mapCalorias . const
 
 setHidratacion :: Int -> Persona -> Persona
 setHidratacion = mapHidratacion . const
@@ -41,9 +41,7 @@ perderCalorias = mapCalorias . subtract -- resta unasCalorias de las calorias
 perderHidratacion :: Int -> Persona -> Persona
 perderHidratacion = mapHidratacion . subtract
 
-tieneEquipamiento :: String -> Persona -> Bool
-tieneEquipamiento unObjeto = elem unObjeto . equipamiento
-
+-- PARTE A
 -- Ejercicios
 -- 1.
 abdominales :: Int -> Ejercicio
@@ -59,6 +57,9 @@ levantarPesas repeticiones unPeso unaPersona
   | tieneEquipamiento "pesa" unaPersona = perderCalorias (32 * repeticiones) . perderHidratacion (repeticiones `div` 10 * unPeso) $ unaPersona
   | otherwise = unaPersona
 
+tieneEquipamiento :: String -> Persona -> Bool
+tieneEquipamiento unObjeto = elem unObjeto . equipamiento
+
 -- 4.
 laGranHomeroSimpson :: Ejercicio
 laGranHomeroSimpson = id
@@ -70,7 +71,7 @@ renovarEquipo = mapEquipamiento (map ("Nuevo " ++))
 
 -- 2.
 volverseYoguista :: Persona -> Persona
-volverseYoguista = mapCalorias (`div` 2) . mapHidratacion (* 2) . setEquipamiento(["colchoneta"])
+volverseYoguista = mapCalorias (`div` 2) . mapHidratacion (* 2) . setEquipamiento ["colchoneta"]
 
 -- 3.
 volverseBodyBuilder :: Persona -> Persona
@@ -83,6 +84,49 @@ tieneSoloPesas = all (== "pesa") . equipamiento
 
 -- 4.
 comerUnSandwich :: Persona -> Persona
-comerUnSandwich = setCalorias 500 . setHidratacion 100
+comerUnSandwich = mapCalorias (+ 500) . setHidratacion 100
 
--- PARTE B
+-- PARTE B: Rutinas
+hacerRutina :: Rutina -> Ejercicio
+hacerRutina unaRutina unaPersona
+  | puedeHacerRutina unaRutina unaPersona = foldr ($) unaPersona (snd unaRutina)
+  | otherwise = error "No puede hacer esta rutina"
+
+puedeHacerRutina :: Rutina -> Persona -> Bool
+puedeHacerRutina unaRutina unaPersona = (fst unaRutina) <= (disponibilidad unaPersona)
+
+-- 1.
+esPeligrosa :: Rutina -> Persona -> Bool
+esPeligrosa unaRutina = estaAgotada . hacerRutina unaRutina
+
+-- 2.
+esBalanceada :: Rutina -> Persona -> Bool
+esBalanceada unaRutina unaPersona = quedaNormal . hacerRutina unaRutina $ unaPersona
+  where quedaNormal personaPostRutina = hidratacion personaPostRutina > 80 && calorias personaPostRutina < calorias unaPersona `div` 2
+
+estaAgotada :: Persona -> Bool
+estaAgotada unaPersona = calorias unaPersona < 50 && hidratacion unaPersona < 10
+
+elAbominableAbdominal :: Rutina
+elAbominableAbdominal = (60, (map abdominales [1..]))
+
+-- PARTE C: Ejercicios grupales
+-- 1.
+seleccionarGrupoDeEjercicio :: Persona -> [Persona] -> [Persona]
+seleccionarGrupoDeEjercicio unaPersona = filter (tienenMismaDisponibilidad unaPersona)
+
+tienenMismaDisponibilidad :: Persona -> Persona -> Bool
+tienenMismaDisponibilidad unaPersona otraPersona = disponibilidad unaPersona == disponibilidad otraPersona
+
+-- 2.
+promedioDeRutina :: Rutina -> [Persona] -> (Int, Int)
+promedioDeRutina unaRutina = estadisticasGrupales . map (hacerRutina unaRutina)
+
+estadisticasGrupales :: [Persona] -> (Int, Int)
+estadisticasGrupales unGrupo = (promedioDe calorias unGrupo, promedioDe hidratacion unGrupo)
+
+promedioDe :: (a -> Int) -> [a] -> Int
+promedioDe getter = promedio . map getter
+
+promedio :: [Int] -> Int
+promedio unosValores = sum unosValores `div` length unosValores
