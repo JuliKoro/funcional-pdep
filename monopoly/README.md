@@ -1,6 +1,5 @@
 # Monopoly
-## [Tarea Opcional - 16/05/2022](https://docs.google.com/document/d/1KazDAzeUB7lYIbuob36d8SS4DGV3_eK93MODm0fWMJY/edit)
-![Monopoly](https://e7.pngegg.com/pngimages/907/358/png-clipart-monopoly-logo-monopoly-rich-uncle-pennybags-logo-board-game-board-game-miscellaneous-game.png)
+## [Tarea Opcional - 16/05/2022](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.stickpng.com%2Fes%2Fcat%2Fjuegos%2Fmonopoly%3Fpage%3D1&psig=AOvVaw21xInwPkVc0g_zXVQIfP_6&ust=1670805847326000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCLju-_yq8PsCFQAAAAAdAAAAABAv)
 
 La cuarentena sigue y levante la mano quién empezó a desempolvar los juegos de mesa 🙋‍♀️🙋‍♂️. Nos encontramos con el _Monopoly_: un juego en donde cada participante compra y vende propiedades con el objetivo de monopolizar la oferta de inmuebles. En esta ocasión, queremos programar tan famoso juego y creemos que vos sos la persona indicada para hacerlo 👩‍💻👨‍💻. ¡A programar!
 
