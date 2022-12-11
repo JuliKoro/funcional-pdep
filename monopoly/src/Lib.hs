@@ -98,7 +98,7 @@ hacerBerrinchePor unaPropiedad unJugador
 leAlcanza :: Propiedad -> Jugador -> Bool
 leAlcanza (_, precio) (UnJugador _ dinero _ _ _) = dinero >= precio
 
-ultimaRonda :: Accion -- corregir, falta que el jugadro ejecute las acciones que va sumando
+ultimaRonda :: Accion -- ¿Se puede ejecutar y que a la vez aplique las funciones que se agregan sobre la marcha?
 ultimaRonda unJugador = foldl (flip ($)) unJugador (acciones unJugador)
 --ultimaRonda unJugador = foldl (flip (.)) id (acciones unJugador) $ unJugador
 
@@ -124,7 +124,10 @@ palacioPaz = ("Palacio Paz", 3000)
 
 -- 4. Ganador
 juegoFinal :: Jugador -> Jugador -> Jugador
-juegoFinal jugador1 jugador2 = quienTieneMasDinero (ultimaRonda jugador1) (ultimaRonda jugador2)
+juegoFinal jugador1 jugador2 = quienTieneMasDinero (jugarNRondas 2 jugador1) (jugarNRondas 2 jugador2)
+
+jugarNRondas :: Int -> Jugador -> Jugador
+jugarNRondas n unJugador = iterate ultimaRonda unJugador !! n
 
 quienTieneMasDinero :: Jugador -> Jugador -> Jugador
 quienTieneMasDinero jugador1 jugador2
