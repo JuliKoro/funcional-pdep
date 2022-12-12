@@ -6,7 +6,7 @@ data Persona = UnaPersona {
   nutrientes :: [Nutriente]
 } deriving Show
 
-data Evento = UnEvento {
+data Evento = UnEvento { -- Punto 3)
   nombre :: String,
   menu :: Menu,
   invitados :: [Persona]
@@ -20,6 +20,26 @@ sofia :: Persona -- Sofia sin comer
 sofia = UnaPersona {
   calorias = 0,
   nutrientes = []
+}
+
+julian :: Persona -- ejemplo colado
+julian = UnaPersona {
+  calorias = 10,
+  nutrientes = []
+}
+
+casamientoMirtaYJose :: Evento -- Ejemplo Evento (alta fiesta)
+casamientoMirtaYJose = UnEvento {
+  nombre = "Casamiento de Mirta y José",
+  menu = [tomate, zanahoria, (carne 200), panBlanco, panIntegral, panDePapa, hamburguesaCheta],
+  invitados = [sofia]
+}
+
+fiestaDeEgresados :: Evento -- Ejemplo Evento (no alta fiesta)
+fiestaDeEgresados = UnEvento {
+  nombre = "Fiesta de Egresados",
+  menu = [],
+  invitados = [sofia]
 }
 
 -- mappers
@@ -83,34 +103,34 @@ estaPipona unaPersona = calorias unaPersona > 2000
 hamburguesaCheta :: Comida
 hamburguesaCheta = panDePapa . carne 180 . tomate . panDePapa
 
--- 3)
-
+-- 3) Menúes
 menuSofia :: Menu
 menuSofia = [panIntegral, zanahoria, hamburguesaCheta]
 
---comerMenu :: Menu -> Persona -> Persona
---comerMenu unMenu unaPersona = map (comer unaPersona) unMenu
-
---comer :: Persona -> Comida -> Persona -- Problema con los $
---comer unaPersona unaComida = (incorporarNutriente . nutrientesComida $ unaComida) . (incorporarCalorias . caloriasComida $ unaComida) $ unaPersona
+comerMenu :: Menu -> Persona -> Persona
+comerMenu unMenu unaPersona = foldr ($) unaPersona unMenu
 
 -- 4)
---altaFiesta :: Evento -> Bool
---altaFiesta unEvento = (all estaSatsifecho) . map (comerMenu . menu $ unEvento) . invitados $ unEvento
+altaFiesta :: Evento -> Bool
+altaFiesta unEvento = all estaSatisfecho . map (comerMenu . menu $ unEvento) . invitados $ unEvento
 
-estaSatsifecho :: Persona -> Bool
-estaSatsifecho unaPersona = estaPipona unaPersona || (length . nutrientes $ unaPersona) >= 5
+estaSatisfecho :: Persona -> Bool
+estaSatisfecho unInvitado = estaPipona unInvitado || (length . nutrientes $ unInvitado) >= 5
 
 -- 5)
---colarseEvento :: [Evento] -> Persona -> [Evento]
---colarseEvento listaDeEventos unColado = map (\unEvento -> colarseSegun unEvento unColado) listaDeEventos
+colarseAEventos :: Persona -> [Evento] -> [Evento]
+--colarseAEventos unColado = map (\unEvento -> colarseVIP unColado unEvento)
+colarseAEventos _ [] = []
+colarseAEventos unColado (x:xs) = (colarseVIP unColado x) : (colarseAEventos unColado xs)
 
---colarseSegun :: Evento -> Evento
---colarseSegun unEvento unColado
---  | altaFiesta unEvento = mapInvitados (: unColado) unEvento
---  | otherwise = id unEvento
+colarseVIP :: Persona -> Evento -> Evento
+colarseVIP unColado unEvento
+  | altaFiesta unEvento = mapInvitados (++ [unColado]) unEvento
+  | otherwise = unEvento
 
 {- 6) ¿Se podría determinar si un evento es alta fiesta si tuviese infinitos invitados?
-No, ya que la condicion de que sea alta fiesta depende de si TODOS los invitados estan satisfecho,
-y altaFiesta estaría evaluando infinitamente la lista de invitados por lo que no respondería nada hasta que la memoria estalle.
+ No se puede saber si un evento es altaFiesta si todos los invitados quedarían satisfechos, ya que
+estaría evaluando infinitamente la lista de invitados.
+ Pero si alguno de ellos queda insatisfecho (no estaSatisfecho), la evaluación termina y responde False,
+esto debido a que Haskell emplea Lazy Evaluation y no necesita tener generada la lista infinita.
 -}
