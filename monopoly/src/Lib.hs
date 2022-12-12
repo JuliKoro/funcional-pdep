@@ -99,7 +99,7 @@ leAlcanza :: Propiedad -> Jugador -> Bool
 leAlcanza (_, precio) (UnJugador _ dinero _ _ _) = dinero >= precio
 
 ultimaRonda :: Accion -- ¿Se puede ejecutar y que a la vez aplique las funciones que se agregan sobre la marcha?
-ultimaRonda unJugador = foldl (flip ($)) unJugador (acciones unJugador)
+ultimaRonda unJugador = foldl (flip ($)) unJugador (acciones unJugador) -- aplica una lista de funciones a un valor
 --ultimaRonda unJugador = foldl (flip (.)) id (acciones unJugador) $ unJugador
 
 --aplicarAcciones :: [Accion] -> Accion
