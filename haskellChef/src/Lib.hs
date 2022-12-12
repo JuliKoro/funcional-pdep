@@ -43,11 +43,14 @@ componente unIngrediente = head . filter ((== unIngrediente) . fst) . componente
 -- Trucos
 -- 1.
 endulzar :: Int -> Truco
-endulzar unosGramos = mapComponentes (++ [("azucar", unosGramos)])
+endulzar unosGramos = condimentarCon "azucar" unosGramos
+
+condimentarCon :: String -> Int -> Plato -> Plato
+condimentarCon unIngrediente unosGramos = mapComponentes (++ [(unIngrediente, unosGramos)])
 
 -- 2.
 salar :: Int -> Truco
-salar unosGramos = mapComponentes (++ [("sal", unosGramos)])
+salar unosGramos = condimentarCon "sal" unosGramos
 
 -- 3.
 darSabor :: Int -> Int -> Truco
