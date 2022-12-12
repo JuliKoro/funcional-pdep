@@ -43,11 +43,13 @@ Dado que este es un programa de concursos de cocina vamos a tener que modelar tr
 
 Para finalizar vamos a modelar el plato definitivo, el ***platinum***. Este plato tiene de especial que tiene infinitos componentes misteriosos con cantidades incrementales y dificultad 10:
 
+```
 > componentes platinum
 [("Ingrediente 1", 1), ("Ingrediente 2", 2), ("Ingrediente 3", 3),..]
 
 > dificultad platinum
 10
+```
 
 Luego de modelar el ***platinum*** respondé las siguientes preguntas justificando tus respuestas:
 
