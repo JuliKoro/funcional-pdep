@@ -1,16 +1,9 @@
--- Bon Appétit
--- Recuperatorio Parcial Funcional - PdeP
 import Text.Show.Functions ()
 -- 1)
--- a)
+-- a) Modelados y Alias de Tipos
 data Persona = UnaPersona {
-  calorias :: Float,
+  calorias :: Int,
   nutrientes :: [Nutriente]
-} deriving Show
-
-data Comida = UnaComida {
-  caloriasComida :: Float,
-  nutrientesComida :: [Nutriente]
 } deriving Show
 
 data Evento = UnEvento {
@@ -20,100 +13,102 @@ data Evento = UnEvento {
 } deriving Show
 
 type Nutriente = String
-
+type Comida = Persona -> Persona
 type Menu = [Comida]
+
+sofia :: Persona -- Sofia sin comer
+sofia = UnaPersona {
+  calorias = 0,
+  nutrientes = []
+}
 
 -- mappers
 mapNutrientes :: ([Nutriente] -> [Nutriente]) -> Persona -> Persona
 mapNutrientes unaFuncion unaPersona = unaPersona {nutrientes = unaFuncion . nutrientes $ unaPersona}
 
-mapCalorias :: (Float -> Float) -> Persona -> Persona
+mapCalorias :: (Int -> Int) -> Persona -> Persona
 mapCalorias unaFuncion unaPersona = unaPersona {calorias = unaFuncion . calorias $ unaPersona}
 
 mapInvitados :: ([Persona] -> [Persona]) -> Evento -> Evento
 mapInvitados unaFuncion unEvento = unEvento {invitados = unaFuncion . invitados $ unEvento}
 
--- b)
+-- b) Funciones Auxiliares
 incorporarNutriente :: Nutriente -> Persona -> Persona
 incorporarNutriente unNutriente unaPersona
-  | any (== unNutriente) . nutrientes $ unaPersona = id unaPersona
-  | otherwise = mapNutrientes (unNutriente :) unaPersona
+  | tieneNutriente unNutriente unaPersona = unaPersona
+  | otherwise = mapNutrientes (++ [unNutriente]) unaPersona
 
-incorporarCalorias :: Float -> Persona -> Persona
+incorporarNutrientes :: [Nutriente] -> Persona -> Persona
+incorporarNutrientes [] unaPersona = unaPersona
+incorporarNutrientes (x:xs) unaPersona = incorporarNutriente x . incorporarNutrientes xs $ unaPersona
+
+tieneNutriente :: Nutriente -> Persona -> Bool
+tieneNutriente unNutriente = elem unNutriente . nutrientes
+
+incorporarCalorias :: Int -> Persona -> Persona
 incorporarCalorias unasCalorias unaPersona = mapCalorias (+ unasCalorias) unaPersona
 
--- 2)
+-- 2) Comidas
 -- a)
 tomate :: Comida
-tomate = undefined ["vitamina A", "vitamina C"]
+tomate = incorporarNutrientes ["vitamina A", "vitamina C"]
 
 -- b)
 zanahoria :: Comida
-zanahoria = undefined ["vitamina A", "vitamina C", "vitamina E", "vitamina K"]
+zanahoria = incorporarNutrientes ["vitamina A", "vitamina C", "vitamina E", "vitamina K"]
 
 -- c)
-carne :: Float -> Comida
-carne gramos = UnaComida{
-  caloriasComida = gramos * 24,
-  nutrientesComida = ["calcio", "hierro"]
-}
+carne :: Int -> Comida
+carne unosGramos = incorporarCalorias (240 * unosGramos `div` 10) . incorporarNutrientes ["calcio", "hierro"]
 
--- d)
+-- d) Panes
 -- i)
 panBlanco :: Comida
-panBlanco = 256 ["zinc"]
+panBlanco = incorporarNutriente "zinc" . incorporarCalorias 265
 
 -- ii)
 panIntegral :: Comida
-panIntegral = 200 ["zinc", "fibras"]
+panIntegral = incorporarNutrientes ["zinc", "fibras"] . incorporarCalorias 200
 
 -- iii)
-panDePapa :: Persona -> Comida
-panDePapa unaPersona = UnaComida {
-  caloriasComida = caloriasPanDePapa unaPersona,
-  nutrientesComida = ["zinc"]
-}
-
-caloriasPanDePapa :: Persona -> Float
-caloriasPanDePapa unaPersona
-  | estaPipona unaPersona = 100
-  | otherwise = 500
+panDePapa :: Comida
+panDePapa unaPersona
+  | estaPipona unaPersona = incorporarNutriente "zinc" . incorporarCalorias 100 $ unaPersona
+  | otherwise = incorporarNutriente "zinc" . incorporarCalorias 500 $ unaPersona
 
 estaPipona :: Persona -> Bool
 estaPipona unaPersona = calorias unaPersona > 2000
 
 -- e)
-hamburguesaCheta :: Persona -> Comida --Corregir
-hamburguesaCheta unaPersona = comerMenu [panDePapa, (carne 180), tomate, panDePapa] unaPersona
+hamburguesaCheta :: Comida
+hamburguesaCheta = panDePapa . carne 180 . tomate . panDePapa
 
 -- 3)
-sofia :: Persona
-sofia = undefined undefined
 
 menuSofia :: Menu
 menuSofia = [panIntegral, zanahoria, hamburguesaCheta]
 
-comerMenu :: Menu -> Persona -> Persona
-comerMenu unMenu unaPersona = map (comer unaPersona) unMenu
+--comerMenu :: Menu -> Persona -> Persona
+--comerMenu unMenu unaPersona = map (comer unaPersona) unMenu
 
-comer :: Persona -> Comida -> Persona -- Problema con los $
-comer unaPersona unaComida = (incorporarNutriente . nutrientesComida $ unaComida) . (incorporarCalorias . caloriasComida $ unaComida) $ unaPersona
+--comer :: Persona -> Comida -> Persona -- Problema con los $
+--comer unaPersona unaComida = (incorporarNutriente . nutrientesComida $ unaComida) . (incorporarCalorias . caloriasComida $ unaComida) $ unaPersona
 
 -- 4)
-altaFiesta :: Evento -> Bool
-altaFiesta unEvento = (all estaSatsifecho) . map (comerMenu . menu $ unEvento) . invitados $ unEvento
+--altaFiesta :: Evento -> Bool
+--altaFiesta unEvento = (all estaSatsifecho) . map (comerMenu . menu $ unEvento) . invitados $ unEvento
 
 estaSatsifecho :: Persona -> Bool
-estaSatsifecho unaPersona = (estaPipona unaPersona) || (nutrientes unaPersona >= 5)
+estaSatsifecho unaPersona = estaPipona unaPersona || (length . nutrientes $ unaPersona) >= 5
 
 -- 5)
-colarseEvento :: [Evento] -> Persona -> [Evento]
-colarseEvento listaDeEventos unColado = map (\unEvento -> colarseSegun unEvento unColado) listaDeEventos
+--colarseEvento :: [Evento] -> Persona -> [Evento]
+--colarseEvento listaDeEventos unColado = map (\unEvento -> colarseSegun unEvento unColado) listaDeEventos
 
-colarseSegun :: Evento -> Evento
-colarseSegun unEvento unColado
-  | altaFiesta unEvento = mapInvitados (: unColado) unEvento
-  | otherwise = id unEvento
+--colarseSegun :: Evento -> Evento
+--colarseSegun unEvento unColado
+--  | altaFiesta unEvento = mapInvitados (: unColado) unEvento
+--  | otherwise = id unEvento
 
 {- 6) ¿Se podría determinar si un evento es alta fiesta si tuviese infinitos invitados?
 No, ya que la condicion de que sea alta fiesta depende de si TODOS los invitados estan satisfecho,
