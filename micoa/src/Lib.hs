@@ -69,6 +69,16 @@ jk = UnRobot {
   tickets = 0
 }
 
+messi :: Robot -- ejemplo de Robot
+messi = UnRobot {
+  nombre = "Messitron",
+  nauseas = 0,
+  tickets = 10
+}
+
+robotsInvitados :: [Robot] -- Ejemplo de unos robots para las Pruebas
+robotsInvitados = [messi, jk, walle, arturito]
+
 -- PARTE B: Pruebas
 pruebaBrasilera :: Prueba
 pruebaBrasilera = filter funciona . map (zamba 10)
@@ -76,8 +86,11 @@ pruebaBrasilera = filter funciona . map (zamba 10)
 funciona :: Robot -> Bool
 funciona unRobot = (nauseas unRobot) < 80
 
---champions :: Juego -> Prueba
---champions unJuego unosRobots = take 3 . reverse . sortBy (compare . tickets) . map unJuego $ unosRobots
+champions :: Juego -> Prueba
+champions unJuego unosRobots = take 3 . reverse . sortBy compareTickets . map unJuego $ unosRobots
+
+compareTickets :: Robot -> Robot -> Ordering
+compareTickets (UnRobot _ _ unosTickets) (UnRobot _ _ otrosTickets) = compare unosTickets otrosTickets
 
 tourCompleto :: Tour -> Robot -> Robot
 tourCompleto unTour unRobot = foldr ($) unRobot unTour
